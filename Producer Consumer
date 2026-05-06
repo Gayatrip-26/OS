@@ -1,0 +1,34 @@
+mutex, full, empty, x = 1, 0, 3, 0
+
+def producer():
+    global mutex, full, empty, x
+    mutex -= 1; full += 1; empty -= 1
+    x += 1
+    print("producer produces the item", x)
+    mutex += 1
+
+def consumer():
+    global mutex, full, empty, x
+    mutex -= 1; full -= 1; empty += 1
+    print("consumer consumes item", x)
+    x -= 1
+    mutex += 1
+
+while True:
+    print("\n1.PRODUCER\n2.CONSUMER\n3.EXIT")
+    n = int(input("ENTER YOUR CHOICE: "))
+
+    if n == 1:
+        if mutex == 1 and empty != 0:
+            producer()
+        else:
+            print("BUFFER IS FULL")
+
+    elif n == 2:
+        if mutex == 1 and full != 0:
+            consumer()
+        else:
+            print("BUFFER IS EMPTY")
+
+    elif n == 3:
+        break
