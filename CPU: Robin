@@ -1,0 +1,91 @@
+from collections import deque
+
+def display(processes, gantt, timeline):
+
+    print("\nGantt Chart:")
+    print("|", end="")
+    for p in gantt:
+        print(f" {p} |", end="")
+    print()
+
+    for t in timeline:
+        print(t, end="   ")
+    print("\n")
+
+    print("Process\tAT\tBT\tCT\tWT\tTAT")
+
+    total_wt = total_tat = 0
+
+    processes.sort(key=lambda x: x['id'])
+
+    for p in processes:
+        tat = p['ct'] - p['at']
+        wt = tat - p['bt']
+
+        total_wt += wt
+        total_tat += tat
+
+        print(f"{p['id']}\t{p['at']}\t{p['bt']}\t{p['ct']}\t{wt}\t{tat}")
+
+    n = len(processes)
+    print("\nAverage WT =", round(total_wt/n,2))
+    print("Average TAT =", round(total_tat/n,2))
+
+
+def round_robin(processes, q):
+
+    time = 0
+    queue = deque()
+
+    gantt = []
+    timeline = [0]
+
+    remaining = {p['id']: p['bt'] for p in processes}
+
+    processes.sort(key=lambda x: x['at'])
+
+    i = 0
+    n = len(processes)
+
+    while queue or i < n:
+
+        while i < n and processes[i]['at'] <= time:
+            queue.append(processes[i])
+            i += 1
+
+        if queue:
+            p = queue.popleft()
+
+            gantt.append(p['id'])
+
+            run = min(q, remaining[p['id']])
+            time += run
+            remaining[p['id']] -= run
+
+            timeline.append(time)
+
+            while i < n and processes[i]['at'] <= time:
+                queue.append(processes[i])
+                i += 1
+
+            if remaining[p['id']] > 0:
+                queue.append(p)
+            else:
+                p['ct'] = time
+        else:
+            time += 1
+
+    display(processes, gantt, timeline)
+
+
+n = int(input("Enter number of processes: "))
+processes = []
+
+for i in range(n):
+    at = int(input("AT: "))
+    bt = int(input("BT: "))
+    processes.append({'id': f'P{i+1}', 'at': at, 'bt': bt})
+
+q = int(input("Enter Time Quantum: "))
+
+round_robin(processes, q)
