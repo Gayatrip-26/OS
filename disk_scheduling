@@ -1,0 +1,79 @@
+def fcfs():
+    req = list(map(int,input("Enter request queue: ").split()))
+    head = int(input("Enter initial head: "))
+
+    seek = 0; cur = head
+    for r in req:
+        seek += abs(r-cur)
+        cur = r
+
+    print("Seek Sequence:", " -> ".join(map(str, req)))
+    print("Total Seek Time:", seek)
+
+fcfs()
+
+
+def sstf():
+    req = list(map(int,input("Enter request queue: ").split()))
+    head = int(input("Enter initial head: "))
+
+    seek = 0; cur = head; seq = []
+    while req:
+        x = min(req, key=lambda i: abs(i-cur))
+        seek += abs(x-cur)
+        cur = x
+        seq.append(x)
+        req.remove(x)
+
+    print("Seek Sequence:", " -> ".join(map(str, seq)))
+    print("Total Seek Time:", seek)
+
+sstf()
+
+def scan():
+    req = list(map(int,input("Enter request queue: ").split()))
+    head = int(input("Enter initial head: "))
+    size = int(input("Enter disk size: "))
+
+    left = sorted([i for i in req if i < head])
+    right = sorted([i for i in req if i >= head])
+
+    seek = 0; cur = head; seq = []
+
+    for r in right:
+        seek += abs(r-cur); cur = r; seq.append(r)
+
+    seek += abs((size-1)-cur); cur = size-1
+
+    for r in reversed(left):
+        seek += abs(r-cur); cur = r; seq.append(r)
+
+    print("Seek Sequence:", " -> ".join(map(str, seq)))
+    print("Total Seek Time:", seek)
+
+scan()
+
+
+def cscan():
+    req = list(map(int,input("Enter request queue: ").split()))
+    head = int(input("Enter initial head: "))
+    size = int(input("Enter disk size: "))
+
+    left = sorted([i for i in req if i < head])
+    right = sorted([i for i in req if i >= head])
+
+    seek = 0; cur = head; seq = []
+
+    for r in right:
+        seek += abs(r-cur); cur = r; seq.append(r)
+
+    seek += abs((size-1)-cur); cur = size-1
+    seek += (size-1); cur = 0
+
+    for r in left:
+        seek += abs(r-cur); cur = r; seq.append(r)
+
+    print("Seek Sequence:", " -> ".join(map(str, seq)))
+    print("Total Seek Time:", seek)
+
+cscan()
