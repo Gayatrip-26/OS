@@ -1,0 +1,120 @@
+def fifo():
+    pages = list(map(int, input("Pages: ").split()))
+    f = int(input("Frames: "))
+
+    frames = []
+    hist = []
+    status = []
+    hit = fault = 0
+
+    for p in pages:
+        if p in frames:
+            hit += 1; status.append("Hit")
+        else:
+            fault += 1; status.append("Fault")
+            if len(frames) < f:
+                frames.append(p)
+            else:
+                frames.pop(0)
+                frames.append(p)
+
+        hist.append(frames + ["-"]*(f-len(frames)))
+
+    print("\nPages:", " ".join(map(str, pages)))
+
+    for i in range(f-1, -1, -1):
+        print("Frame", i+1, ":", end=" ")
+        for j in range(len(pages)):
+            print(hist[j][i], end=" ")
+        print()
+
+    print("Status:", " ".join(status))
+    print("Hits:", hit)
+    print("Faults:", fault)
+
+    # ✅ ADD THIS LINE
+    print("Page Fault Ratio:", round(fault/len(pages), 2))
+
+fifo()
+
+
+
+def lru():
+    pages = list(map(int, input("Pages: ").split()))
+    f = int(input("Frames: "))
+
+    frames = []
+    hist = []
+    status = []
+    hit = fault = 0
+
+    for p in pages:
+        if p in frames:
+            hit += 1; status.append("Hit")
+            frames.remove(p)
+            frames.append(p)
+        else:
+            fault += 1; status.append("Fault")
+            if len(frames) < f:
+                frames.append(p)
+            else:
+                frames.pop(0)
+                frames.append(p)
+
+        hist.append(frames + ["-"]*(f-len(frames)))
+
+    print("\nPages:", " ".join(map(str, pages)))
+
+    for i in range(f-1, -1, -1):
+        print("Frame", i+1, ":", *[hist[j][i] for j in range(len(pages))])
+
+    print("Status:", " ".join(status))
+    print("Hits:", hit)
+    print("Faults:", fault)
+    print("Page Fault Ratio:", round(fault/len(pages), 2))
+
+
+lru()
+
+
+
+def optimal():
+    pages = list(map(int, input("Pages: ").split()))
+    f = int(input("Frames: "))
+
+    frames = []
+    hist = []
+    status = []
+    hit = fault = 0
+
+    for i,p in enumerate(pages):
+        if p in frames:
+            hit += 1; status.append("Hit")
+        else:
+            fault += 1; status.append("Fault")
+            if len(frames) < f:
+                frames.append(p)
+            else:
+                idx = 0; far = -1
+                for j in range(len(frames)):
+                    if frames[j] not in pages[i+1:]:
+                        idx = j; break
+                    pos = pages[i+1:].index(frames[j])
+                    if pos > far:
+                        far = pos; idx = j
+                frames[idx] = p
+
+        hist.append(frames + ["-"]*(f-len(frames)))
+
+    print("\nPages:", " ".join(map(str, pages)))
+
+    for i in range(f-1, -1, -1):
+        print("Frame", i+1, ":", *[hist[j][i] for j in range(len(pages))])
+
+    print("Status:", " ".join(status))
+    print("Hits:", hit)
+    print("Faults:", fault)
+    print("Page Fault Ratio:", round(fault/len(pages), 2))
+
+
+optimal()
