@@ -1,0 +1,48 @@
+#Practical NO: 8
+def sequential():
+    f = input("Enter file name: ")
+    s = int(input("Enter starting block: "))
+    l = int(input("Enter length: "))
+
+    print("\nFile:", f)
+    print("Allocated blocks are:")
+    print("-".join(str(s+i) for i in range(l)))
+
+sequential()
+
+
+def linked():
+    f = input("Enter file name: ")
+    cur = int(input("Enter starting block: "))
+    end = int(input("Enter ending block: "))
+
+    print("Enter pointer (-1 for end):")
+    blocks = []
+
+    while True:
+        blocks.append(cur)
+        if cur == end:
+            break
+        cur = int(input(f"Pointer from block {cur}: "))
+
+    print("\nFile:", f)
+    print("Allocated blocks are:")
+    print("-".join(map(str, blocks)))
+
+linked()
+
+
+
+def indexed():
+    f = input("Enter file name: ")
+    idx = int(input("Enter index block: "))
+    n = int(input("Enter number of blocks: "))
+
+    blocks = [input(f"Block {i+1}: ") for i in range(n)]
+
+    print("\nFile:", f)
+    print("Index Block:", idx)
+    print("Allocated blocks are:")
+    print("Index(" + str(idx) + ") -> " + "-".join(blocks))
+
+indexed()
