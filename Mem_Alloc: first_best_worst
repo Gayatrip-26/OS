@@ -1,0 +1,65 @@
+def first_fit():
+    b = list(map(int, input("Enter block sizes: ").split()))
+    p = list(map(int, input("Enter process sizes: ").split()))
+
+    print("\nFirst Fit Allocation")
+    print("Process\tSize\tBlock\tFragment")
+
+    for i in range(len(p)):
+        done = 0
+        for j in range(len(b)):
+            if b[j] >= p[i]:
+                print(f"P{i+1}\t{p[i]}\tB{j+1}\t{b[j]-p[i]}")
+                b[j] -= p[i]
+                done = 1
+                break
+        if not done:
+            print(f"P{i+1}\t{p[i]}\tNot Allocated\t-")
+
+first_fit()
+
+
+def best_fit():
+    b = list(map(int, input("Enter block sizes: ").split()))
+    p = list(map(int, input("Enter process sizes: ").split()))
+
+    print("\nBest Fit Allocation")
+    print("Process\tSize\tBlock\tFragment")
+
+    for i in range(len(p)):
+        idx = -1
+        for j in range(len(b)):
+            if b[j] >= p[i] and (idx==-1 or b[j] < b[idx]):
+                idx = j
+
+        if idx != -1:
+            print(f"P{i+1}\t{p[i]}\tB{idx+1}\t{b[idx]-p[i]}")
+            b[idx] -= p[i]
+        else:
+            print(f"P{i+1}\t{p[i]}\tNot Allocated\t-")
+
+best_fit()
+
+
+
+
+def worst_fit():
+    b = list(map(int, input("Enter block sizes: ").split()))
+    p = list(map(int, input("Enter process sizes: ").split()))
+
+    print("\nWorst Fit Allocation")
+    print("Process\tSize\tBlock\tFragment")
+
+    for i in range(len(p)):
+        idx = -1
+        for j in range(len(b)):
+            if b[j] >= p[i] and (idx==-1 or b[j] > b[idx]):
+                idx = j
+
+        if idx != -1:
+            print(f"P{i+1}\t{p[i]}\tB{idx+1}\t{b[idx]-p[i]}")
+            b[idx] -= p[i]
+        else:
+            print(f"P{i+1}\t{p[i]}\tNot Allocated\t-")
+
+worst_fit()
