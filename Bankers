@@ -1,0 +1,18 @@
+Banker's AlgorithmCode:
+def b():
+ n,m=int(input()),int(input())
+ a=[list(map(int,input().split()))for _ in range(n)]
+ mx=[list(map(int,input().split()))for _ in range(n)]
+ if input()=="y": av=list(map(int,input().split()))
+ else:
+ t=list(map(int,input().split()))
+ av=[t[j]-sum(a[i][j]for i in range(n))for j in range(m)]
+ need=[[mx[i][j]-a[i][j]for j in range(m)]for i in range(n)]
+ d=[0]*n; s=[]
+ for _ in range(n):
+ for i in range(n):
+ if not d[i] and all(need[i][j]<=av[j]for j in range(m)):
+ av=[av[j]+a[i][j]for j in range(m)]
+ d[i]=1; s+=["P"+str(i)]
+ print("SAFE: "+" -> ".join(s) if sum(d)==n else "UNSAFE: System is in deadlock")
+b()
